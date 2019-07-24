@@ -45,7 +45,7 @@ app.get("/get-data",function(request,response,next)
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/";
 
-MongoClient.connect(url, function(err, db) {
+MongoClient.connect(url,{ useNewUrlParser: true }, function(err, db) {
   if (err) throw err;
   var dbo = db.db("mydb");
   dbo.collection("film").find({}).toArray(function(err, result) {
@@ -57,7 +57,27 @@ MongoClient.connect(url, function(err, db) {
 response.redirect("/");
     });
 
+app.get("/hellothere",function(request,response)
+{
+var MongoClient = require('mongodb').MongoClient;
+var url = "mongodb://localhost:27017/";
 
+MongoClient.connect(url,{ useNewUrlParser: true }, function(err, db) {
+  if (err) throw err;
+  var dbo = db.db("mydb");
+  dbo.collection("film").find({}).toArray(function(err, result) {
+    if (err) throw err;
+    console.log(result);
+    db.close();
+
+
+
+  response.send(result)})
+
+  //This is the API to fetch the data, Tested in Postman
+  //http://localhost:1337/hellothere
+})
+});
 
 
 app.listen(1337,function(){ console.log("Listening 1337 port");})
